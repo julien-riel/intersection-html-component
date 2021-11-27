@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // variable for the namespace 
+            const svgns = "http://www.w3.org/2000/svg";
+            const lg = 400;
+            const strokeWidth = 20;
+            const racineSvg = "monaffaire";
+
+            const couleurGazon = "lightGray";
+            const couleurRoute = "gray";
+            const radius = 30;
+            const couleurLigneJaune = "yellow";
+
+        function allo() {
+            faireAsphalte();
+
+            // Les terrains des maisons
+            faireRectangle(0,0);
+            faireRectangle(lg*2,0);
+            faireRectangle(0,lg*2);
+            faireRectangle(lg*2,lg*2);
+
+            // Lignes jaunes
+            // horizontales
+            createLigneJaune(0, lg + (2/4*lg), lg, lg + (2/4*lg));
+            createLigneJaune(lg * 2, lg + (2/4*lg), lg*3, lg + (2/4*lg));
+            // verticales
+            createLigneJaune(lg + (2/4*lg), 0 , lg + (2/4*lg), lg);
+            createLigneJaune(lg + (2/4*lg), lg * 2 , lg + (2/4*lg), lg*3);
+
+            // Lignes blanches
+            // verticales
+            createLigneBlanche(lg, lg + (2/4*lg), lg, lg *2);
+            createLigneBlanche(lg*2, lg, lg*2, lg + (2/4*lg));
+            //horizontales
+            createLigneBlanche( lg, lg, lg+ (2/4*lg), lg)
+            createLigneBlanche( lg+ (2/4*lg), lg*2, lg*2, lg*2)
+
+
+            // Faire les mouvements
+
+            const xSouth = lg + (3/4*lg);
+            const ySouth = lg*2;
+            const rotSouth = 0;
+            const colorSouth = "red";
+            const couleurSortante = '#444444'
+
+            createUTurn(xSouth, ySouth, rotSouth, colorSouth,5);
+            createLeftTurn(xSouth, ySouth, rotSouth, colorSouth, 10);
+            createRightTurn(xSouth, ySouth, rotSouth, colorSouth, 5);
+            createToutDroit(xSouth, ySouth, rotSouth, colorSouth, 12);
+            
+            faireBase(xSouth, ySouth,rotSouth, xSouth, ySouth, colorSouth);
+            faireSortante(xSouth, ySouth,rotSouth, xSouth, ySouth, couleurSortante);
+            
+
+            const xEast = lg*2;
+            const yEast = lg + (1/4*lg);
+            const rotEast = -90;
+            const colorEast = "blue";
+           
+            createUTurn(xEast, yEast, rotEast, colorEast,5);
+            createLeftTurn(xEast, yEast, rotEast, colorEast, 12);
+            createRightTurn(xEast, yEast, rotEast, colorEast, 5);
+            createToutDroit(xEast, yEast, rotEast, colorEast, 22);
+            
+            faireBase(xEast, yEast,rotEast, xEast, yEast, colorEast);
+            faireSortante(xEast, yEast,rotEast, xEast, yEast, couleurSortante);
+
+
+
+            const xWest = lg;
+            const yWest = lg + (3/4*lg);
+            const rotWest = 90;
+            const colorWest = "green";
+            createUTurn(xWest, yWest, rotWest, colorWest,5);
+            createLeftTurn(xWest, yWest, rotWest, colorWest, 2);
+            createRightTurn(xWest, yWest, rotWest, colorWest, 5);
+            createToutDroit(xWest, yWest, rotWest, colorWest, 5);
+            
+            faireBase(xWest, yWest,rotWest, xWest, yWest, colorWest);
+            faireSortante(xWest, yWest,rotWest, xWest, yWest, couleurSortante);
+
+
+            const xNorth = lg + (1/4*lg);
+            const yNorth = lg;
+            const rotNorth = 180;
+            const colorNorth = "orange";
+            
+            createUTurn(xNorth, yNorth, rotNorth, colorNorth,5);
+            createLeftTurn(xNorth, yNorth, rotNorth, colorNorth, 7);
+            createRightTurn(xNorth, yNorth, rotNorth, colorNorth,7);
+            createToutDroit(xNorth, yNorth, rotNorth, colorNorth, 16);
+            
+            faireBase(xNorth, yNorth,rotNorth, xNorth, yNorth, colorNorth);
+            faireSortante(xNorth, yNorth,rotNorth, xNorth, yNorth, couleurSortante);
+
+        }
+
+        function faireRectangle(x,y) {
+
+            // make a simple rectangle
+            let newRect = document.createElementNS(svgns, "rect");
+            newRect.setAttribute("x", x);
+            newRect.setAttribute("y", y);
+            newRect.setAttribute("width", lg);
+            newRect.setAttribute("height", lg);
+            newRect.setAttribute("fill", couleurGazon);
+           
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(newRect);
+        }
+
+
+        function faireAsphalte() {
+            // make a simple rectangle
+            let newRect = document.createElementNS(svgns, "rect");
+            newRect.setAttribute("x", 0);
+            newRect.setAttribute("y", 0);
+            newRect.setAttribute("width", lg*3);
+            newRect.setAttribute("height", lg*3);
+            newRect.setAttribute("fill", couleurRoute);
+
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(newRect);
+        }
+
+        function faireCercle(x,y,r, rot, rotX, rotY, col) {
+            // make a simple circle
+            let circle = document.createElementNS(svgns, "circle");
+            circle.setAttribute("cx", ""+x);
+            circle.setAttribute("cy", ""+y);
+            circle.setAttribute("r", ""+r);
+            circle.setAttribute("fill", col);
+            if(rotX) {
+                circle.setAttribute("transform", `rotate(${rot} ${rotX} ${rotY})`);
+            }
+
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(circle);
+        }
+
+        function createLeftTurn(x, y, rot, col, w) {
+            const xFin = (x- ( 3/4 *lg));
+            const xFin2= (x- ( 3/4 *lg)) - (1/3*lg);
+            const yFin = (y- ( 3/4 *lg)) + (1*strokeWidth);
+
+            let path = document.createElementNS(svgns, "path");
+            path.setAttribute("d",`M${x} ${y} Q ${x} ${yFin} ${xFin} ${yFin}`);
+            path.setAttribute("stroke", col);
+            path.setAttribute("fill", "transparent");
+            path.setAttribute("stroke-width", w);
+            path.setAttribute("transform", `rotate(${rot} ${x} ${y})`);
+            
+            faireLigne(xFin, yFin, xFin2, yFin, rot, x, y, col, w);
+            faireCercle(xFin2,yFin + radius - (w/2), radius,rot, x, y, col);
+
+
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(path);
+        }
+
+        function faireBase(x,y,rot, x, y, col) {
+            faireCercle(x,y + radius * 1.25, radius * 1.25,rot, x, y, col);
+        }
+
+        function faireSortante(x,y,rot, x, y, col) {
+            const yFin = y-lg-((0.8)*lg);
+            faireCercle(x,yFin + radius * 1.6, radius * 1.6,rot, x, y, col);
+        }
+
+        function createUTurn(x, y, rot, col, w) {
+            const xMilieu = x- ( 1/4 *lg);
+            const yMilieu = y  - ( 1/8 *lg);
+
+
+            const xFin = (x - ( 2/4 *lg)) + (2*strokeWidth);
+            const xFin2 = (x - ( 2/4 *lg)) + (2*strokeWidth);
+            const yFin = (y) ;
+            const yFin2 = (y)  + ( 0.15 *lg) ;
+
+            let path1 = document.createElementNS(svgns, "path");
+            path1.setAttribute("d",`M${x} ${y} Q ${x} ${yMilieu} ${xMilieu} ${yMilieu}`);
+            path1.setAttribute("stroke", col);
+            path1.setAttribute("fill", "transparent");
+            path1.setAttribute("stroke-width", w);
+            path1.setAttribute("transform", `rotate(${rot} ${x} ${y})`);
+
+            let path2 = document.createElementNS(svgns, "path");
+            path2.setAttribute("d",`M${xMilieu} ${yMilieu} Q ${xFin+(0.015*lg)} ${yMilieu} ${xFin} ${yFin}`);
+            path2.setAttribute("stroke", col);
+            path2.setAttribute("fill", "transparent");
+            path2.setAttribute("stroke-width", w);
+            path2.setAttribute("transform", `rotate(${rot} ${x} ${y})`);
+
+            faireLigne(xFin, yFin, xFin, yFin2, rot, x, y, col, w);
+            faireCercle(xFin2+radius - (w/2), yFin2, radius,rot, x, y, col);
+
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(path1);
+            elem.appendChild(path2);
+        }
+
+        function createRightTurn(x, y, rot, col, w) {
+
+            const xFin = x+ ( 1/4 *lg);
+            const xFin2 = (x+ ( 1/4 *lg)) + (1/3*lg) 
+            const yFin = (y- ( 1/4 *lg)) + (1*strokeWidth);
+
+            let path = document.createElementNS(svgns, "path");
+            path.setAttribute("d",`M${x} ${y} Q ${x} ${yFin} ${xFin} ${yFin}`);
+            path.setAttribute("stroke", col);
+            path.setAttribute("fill", "transparent");
+            path.setAttribute("stroke-width", w);
+            path.setAttribute("transform", `rotate(${rot} ${x} ${y})`);
+
+            faireLigne(xFin, yFin, xFin2, yFin, rot, x , y,col, w);
+            faireCercle(xFin2,yFin + radius - (w/2), radius,rot, x, y, col);
+
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(path);
+        }
+
+        function faireLigne(x1, y1, x2, y2, rot, rotX, rotY, col, w) {
+            let line = document.createElementNS(svgns, "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+
+            line.setAttribute("stroke", col);
+            line.setAttribute("stroke-width", w);
+            line.setAttribute("transform", `rotate(${rot} ${rotX} ${rotY})`);
+
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(line);
+        }
+
+        function createToutDroit(x, y, rot, col, w) {
+
+            const yFin = y-lg-((2/4)*lg);
+            faireLigne(x, y, x, yFin, rot, x, y, col, w);
+            faireCercle(x,yFin + radius - (w), radius,rot, x, y, col);
+
+
+            const elem = document.getElementById(racineSvg);
+
+        }
+
+        function createLigneJaune(x, y, x2, y2) {
+            let line = document.createElementNS(svgns, "line");
+            line.setAttribute("x1", x);
+            line.setAttribute("y1", y);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+
+            line.setAttribute("stroke", couleurLigneJaune);
+            line.setAttribute("stroke-width", 5);
+
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(line);
+        }
+
+        function createLigneBlanche(x, y, x2, y2) {
+            let line = document.createElementNS(svgns, "line");
+            line.setAttribute("x1", x);
+            line.setAttribute("y1", y);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+
+            line.setAttribute("stroke", "white");
+            line.setAttribute("stroke-width", 15);
+
+            const elem = document.getElementById(racineSvg);
+            elem.appendChild(line);
+        }
+
+        
+    </script>
+</head>
+<body>
+    <svg id="monaffaire" width="1200" height="1200">
+        
+    </svg>
+    <script>
+        allo();
+    </script>
+</body>
+</html>

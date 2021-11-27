@@ -1,0 +1,29 @@
+<body>
+    <troncon id="a">
+        <vdm-voie direction=""></vdm-voie>
+        <vdm-voie direction=""></vdm-voie>
+        <vdm-voie direction=""></vdm-voie>
+    </troncon>
+    <vdm-intersection>
+        <vdm-approche>
+            <vdm-voie></vdm-voie>
+            <vdm-ref-troncon ref="a"></<vdm-ref-troncon>
+            <vdm-voie></vdm-voie>
+        </vdm-approche>
+    </vdm-intersection>
+</body>
+</html>
+
+
+trottoir    trottoir ->
+            piste cyclable ->
+parking     parking  ->
+car         car <-
+car         car <-
+parking     car -
+trottoir    trottoir ->
+terre-plein
+car         car ->
+car         car ->
+parking     car -v
+trottoir    trottoir ->
