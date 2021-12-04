@@ -5,11 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="scripts/drawLib.js"></script>
+    <script src="scripts/lane.js"></script>
+    <script src="scripts/approche.js"></script>
+    <script src="scripts/laneUsage.js"></script>
+    <script type="module" src="scripts/greetings.js"></script>
     <script>
-      const svgns = "http://www.w3.org/2000/svg";
+      //      const svgns = "http://www.w3.org/2000/svg";
       const lg = 400;
       const strokeWidth = 20;
-      const racineSvg = "street";
+
+      //   const racineSvg = "street";
 
       const couleurGazon = "lightGray";
       const couleurRoute = "gray";
@@ -17,334 +23,6 @@
       const couleurLigneJaune = "yellow";
       const distanceLigneArret = 20;
       const distanceFlechesLigneArret = 100;
-      class Lane {
-        constructor({ x, y, width, height, usage, lines, type }) {
-          this.x = x || 0;
-          this.y = y || 0;
-          this.width = width;
-          this.height = height || 500; // "trottoir (haut) ou route (bas)"
-          this.type = type || "entrant";
-          this.distanceLigneArret = distanceLigneArret;
-          this.lines = lines || {};
-
-          (this.usage = usage || "voitures"),
-            (this.virages = ["gauche", "tout-droit", "droite", "demi-tour"]);
-        }
-
-        createLignePointille(x, y, x2, y2, color) {
-          let line = document.createElementNS(svgns, "line");
-          line.setAttribute("x1", x);
-          line.setAttribute("y1", y);
-          line.setAttribute("x2", x2);
-          line.setAttribute("y2", y2);
-          line.setAttribute("stroke", color);
-          line.setAttribute("stroke-dasharray", "30 25");
-          line.setAttribute("stroke-width", 5);
-          const elem = document.getElementById(racineSvg);
-          elem.appendChild(line);
-        }
-
-        createLignePleine(x, y, x2, y2, color) {
-          let line = document.createElementNS(svgns, "line");
-          line.setAttribute("x1", x);
-          line.setAttribute("y1", y);
-          line.setAttribute("x2", x2);
-          line.setAttribute("y2", y2);
-          line.setAttribute("stroke", color);
-          line.setAttribute("stroke-width", 5);
-
-          const elem = document.getElementById(racineSvg);
-          elem.appendChild(line);
-        }
-
-        drawRectangle(x, y, width, height, couleur) {
-          // make a simple rectangle
-          const lg = 100;
-          let newRect = document.createElementNS(svgns, "rect");
-          newRect.setAttribute("x", x);
-          newRect.setAttribute("y", y);
-          newRect.setAttribute("width", width);
-          newRect.setAttribute("height", height);
-          newRect.setAttribute("fill", couleur);
-
-          const elem = document.getElementById(racineSvg);
-          elem.appendChild(newRect);
-          console.log("Yeah!");
-        }
-
-        drawCircle(x, y, r, col) {
-          // make a simple circle
-          let circle = document.createElementNS(svgns, "circle");
-          circle.setAttribute("cx", "" + x);
-          circle.setAttribute("cy", "" + y);
-          circle.setAttribute("r", "" + r);
-          circle.setAttribute("fill", col);
-          const elem = document.getElementById(racineSvg);
-          elem.appendChild(circle);
-        }
-
-        drawText(x, y, text) {
-          const lg = 100;
-          let newRect = document.createElementNS(svgns, "text");
-          newRect.setAttribute("x", x);
-          newRect.setAttribute("y", y);
-
-          const elem = document.getElementById(racineSvg);
-          elem.appendChild(newRect);
-          newRect.innerHTML = text;
-          console.log("Yeah!");
-        }
-
-        drawUse(x, y, id) {
-          let newRect = document.createElementNS(svgns, "use");
-          newRect.setAttribute("x", x);
-          newRect.setAttribute("y", y);
-          newRect.setAttribute("href", "#" + id);
-
-          const elem = document.getElementById(racineSvg);
-          elem.appendChild(newRect);
-        }
-
-        debugPoint(x, y, nom) {
-          this.drawCircle(x, y, 5, "red");
-          this.drawText(x, y, nom);
-        }
-
-        /**
-         * Dessine les lignes, il faut dessiner les lignes après avoir dessiné la chaussée.
-         *
-         * Cette fonction mérite d'être refactorisée
-         * */
-        drawLines() {
-          const margin = 8;
-          if (this.lines.lineLeft) {
-            console.log("this.lines.lineLeft.type", this.lines.lineLeft.type);
-            if (this.lines.lineLeft.type == "solid") {
-              this.createLignePleine(
-                margin + this.x,
-                this.y + this.distanceLigneArret,
-                margin + this.x,
-                this.y + this.height,
-                this.lines.lineLeft.color
-              );
-            } else {
-              this.createLignePointille(
-                margin + this.x,
-                this.y + this.distanceLigneArret,
-                margin + this.x,
-                this.y + this.height,
-                this.lines.lineLeft.color
-              );
-            }
-          }
-          if (this.lines.lineCenter) {
-            if (this.lines.lineCenter.type == "solid") {
-              this.createLignePleine(
-                this.width + this.x,
-                this.y + this.distanceLigneArret,
-                this.width + this.x,
-                this.y + this.height,
-                this.lines.lineCenter.color
-              );
-            } else {
-              this.createLignePointille(
-                this.width + this.x,
-                this.y + this.distanceLigneArret,
-                this.width + this.x,
-                this.y + this.height,
-                this.lines.lineCenter.color
-              );
-            }
-          }
-          if (this.lines.lineRight) {
-            if (this.lines.lineRight.type == "solid") {
-              this.createLignePleine(
-                -margin + this.width + this.x,
-                this.y + this.distanceLigneArret,
-                -margin + this.width + this.x,
-                this.y + this.height,
-                this.lines.lineRight.color
-              );
-            } else {
-              this.createLignePointille(
-                -margin + this.width + this.x,
-                this.y + this.distanceLigneArret,
-                -margin + this.width + this.x,
-                this.y + this.height,
-                this.lines.lineRight.color
-              );
-            }
-          }
-
-          if (this.usage == "car" && this.type === "entrant")
-            this.createLignePleine(
-              this.x,
-              this.y + this.distanceLigneArret,
-              this.x + this.width,
-              this.y + this.distanceLigneArret,
-              "white"
-            );
-        }
-
-        getCouleurByUsage(usage) {
-          if (usage == "car") {
-            return couleurRoute;
-          } else if (usage == "trottoir") {
-            return "lightGray";
-          } else if (usage == "terre-plein") {
-            return "green";
-          }
-          return couleurRoute;
-        }
-
-        draw() {
-          if (this.usage == "trottoir") {
-            this.drawCircle(
-              0,
-              this.y,
-              this.width,
-              this.getCouleurByUsage(this.usage)
-            );
-          }
-
-          this.drawRectangle(
-            this.x,
-            this.y,
-            this.width,
-            this.height,
-            this.getCouleurByUsage(this.usage)
-          );
-          this.drawCircle(this.x, 0, 2, "black");
-
-          //
-          if (this.usage == "car" && this.type == "entrant") {
-            const posFlecheX = this.getLaneCenter().x;
-            const posFlecheY =
-              this.y + distanceLigneArret + distanceFlechesLigneArret;
-            const offset = 20;
-            this.drawUse(-offset + posFlecheX, posFlecheY, "gauche");
-            this.drawUse(0 + posFlecheX, posFlecheY, "centre");
-            this.drawUse(+offset + posFlecheX, posFlecheY, "droite");
-            this.drawUse(+0 + posFlecheX, posFlecheY + 200, "bike");
-          }
-        }
-
-        debug() {
-          const textMargin = 7;
-          this.debugPoint(this.x, this.y, "x,y");
-          this.debugPoint(
-            this.getLaneCenter().x,
-            this.y + 30,
-            "milieu de voie"
-          );
-          const posFlecheY =
-            this.y + distanceLigneArret + distanceFlechesLigneArret;
-          this.drawText(this.x + textMargin, posFlecheY + 230, this.usage);
-        }
-
-        getLaneCenter() {
-          console.log(this.x, this.width, this.width / 2);
-          return {
-            x: this.x + this.width / 2,
-          };
-        }
-      }
-
-      class Approche {
-        constructor(lanes) {
-          this.x = 100;
-          this.y = 100;
-
-          this.lanes = lanes;
-        }
-
-        getWidth() {
-          let width = 0;
-          for (const lane of this.lanes) {
-            width += lane.width;
-          }
-
-          return width;
-        }
-
-        draw() {
-          //const rayonRondeurTrottoir = lane0.width;
-          // Dessiner l'arrière plan
-          /*this.drawRectangle(
-            0,0,1200,1200,
-            'gray'
-          );*/
-
-          // Dessiner la chaussée et le terrain
-          let cursorPosition = this.x;
-          for (const lane of this.lanes) {
-            lane.x = cursorPosition;
-            lane.y = this.y;
-            cursorPosition += lane.width;
-            lane.draw();
-          }
-
-          cursorPosition = this.x;
-          for (const lane of this.lanes) {
-            lane.x = cursorPosition;
-            lane.y = this.y;
-            cursorPosition += lane.width;
-            lane.drawLines();
-          }
-
-          const debugMode = false;
-          if (debugMode) {
-            cursorPosition = this.x;
-            for (const lane of this.lanes) {
-              lane.x = cursorPosition;
-              lane.y = this.y;
-              cursorPosition += lane.width;
-              lane.debug();
-            }
-          }
-        }
-      }
-
-      class Trottoir extends Lane {
-        constructor() {
-          super({
-            width: 75,
-            usage: "trottoir",
-          });
-        }
-      }
-
-      class OutgoingMotorized extends Lane {
-        constructor(options) {
-          super({
-            width: 150,
-            type: "sortant",
-            usage: "car",
-            ...options,
-          });
-        }
-      }
-
-      class IncomingMotorized extends Lane {
-        constructor(options) {
-          super({
-            width: 100,
-            type: "entrant",
-            usage: "car",
-            ...options,
-          });
-        }
-      }
-
-      class TerrePlein extends Lane {
-        constructor(options) {
-          super({
-            width: 60,
-            usage: "terre-plein",
-            ...options,
-          });
-        }
-      }
 
       function main() {
         console.log("Bonjour");
@@ -392,8 +70,29 @@
           new Trottoir(),
         ];
 
-        const uneApproche = new Approche(lanes);
+
+        // const approcheNord = new Approche('nord', lanes);
+        // const approcheSud = new Approche('sud', lanes);
+        // const approcheOuest = new Approche('ouest', lanes);
+        // const approcheEst = new Approche('est', lanes);
+
+        // const streetProfile = new ProfilDeRue(lanes);
+
+       // const intersection = new Intersection(approcheNord, approcheSud, approcheOuest, approcheEst);
+
+        const uneApproche = new Approche(lanes, 'south', 100, 100);
         uneApproche.draw();
+
+        const uneAutreApproche = new Approche(
+          [
+            new Trottoir(),
+            new IncomingMotorized(),
+            new IncomingMotorized(),
+            new IncomingMotorized(),
+            new IncomingMotorized(),
+            new Trottoir(),
+          ], 'east', 500, 500);
+        uneAutreApproche.draw();
       }
     </script>
   </head>
