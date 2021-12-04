@@ -1,3 +1,7 @@
+# Des idées pour représenter une intersection.
+
+## Comme un composant html
+
 <body>
     <troncon id="a">
         <vdm-voie direction=""></vdm-voie>
@@ -15,6 +19,7 @@
 </html>
 
 
+## À la plantuml 
 trottoir    trottoir ->
             piste cyclable ->
 parking     parking  ->
@@ -23,7 +28,7 @@ car         car <-
 parking     car -
 trottoir    trottoir ->
 terre-plein
-car         car ->
+car         car -^
 car         car ->
 parking     car -v
 trottoir    trottoir ->

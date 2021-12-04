@@ -5,94 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="scripts/drawLib.js"></script>
-    <script src="scripts/lane.js"></script>
-    <script src="scripts/approche.js"></script>
-    <script src="scripts/laneUsage.js"></script>
-    <script type="module" src="scripts/greetings.js"></script>
+    <script  type="module"src="scripts/drawLib.js"></script>
+    <script type="module" src="scripts/lane.js"></script>
+    <script type="module" src="scripts/approche.js"></script>
+    <script type="module" src="scripts/laneUsage.js"></script>
+    <script type="module" src="main.js"></script>
     <script>
-      //      const svgns = "http://www.w3.org/2000/svg";
-      const lg = 400;
-      const strokeWidth = 20;
-
-      //   const racineSvg = "street";
-
-      const couleurGazon = "lightGray";
-      const couleurRoute = "gray";
-      const radius = 30;
-      const couleurLigneJaune = "yellow";
-      const distanceLigneArret = 20;
-      const distanceFlechesLigneArret = 100;
-
+ 
       function main() {
-        console.log("Bonjour");
-        const lane1 = new OutgoingMotorized({
-          lines: {
-            lineLeft: {
-              type: "solid",
-              color: "white",
-            },
-            lineRight: {
-              type: "solid",
-              color: "yellow",
-            },
-          },
-        });
 
-        const lane2 = new IncomingMotorized({
-          lines: {
-            lineLeft: {
-              type: "solid",
-              color: "yellow",
-            },
-            lineCenter: {
-              type: "dashed",
-              color: "white",
-            },
-          },
-        });
-
-        const lane3 = new IncomingMotorized({
-          lines: {
-            lineRight: {
-              type: "solid",
-              color: "white",
-            },
-          },
-        });
-
-        const lanes = [
-          new Trottoir(),
-          lane1,
-          new TerrePlein(),
-          lane2,
-          lane3,
-          new Trottoir(),
-        ];
-
-
-        // const approcheNord = new Approche('nord', lanes);
-        // const approcheSud = new Approche('sud', lanes);
-        // const approcheOuest = new Approche('ouest', lanes);
-        // const approcheEst = new Approche('est', lanes);
-
-        // const streetProfile = new ProfilDeRue(lanes);
-
-       // const intersection = new Intersection(approcheNord, approcheSud, approcheOuest, approcheEst);
-
-        const uneApproche = new Approche(lanes, 'south', 100, 100);
-        uneApproche.draw();
-
-        const uneAutreApproche = new Approche(
-          [
-            new Trottoir(),
-            new IncomingMotorized(),
-            new IncomingMotorized(),
-            new IncomingMotorized(),
-            new IncomingMotorized(),
-            new Trottoir(),
-          ], 'east', 500, 500);
-        uneAutreApproche.draw();
       }
     </script>
   </head>

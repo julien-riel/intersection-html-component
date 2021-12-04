@@ -4,6 +4,7 @@
   "description": "A html component to display the intersection of two streets",
   "main": "index.js",
   "scripts": {
+    "compile": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/julien-riel/intersection-html-component/issues"
   },
-  "homepage": "https://github.com/julien-riel/intersection-html-component#readme"
+  "homepage": "https://github.com/julien-riel/intersection-html-component#readme",
+  "devDependencies": {
+    "typescript": "^4.5.2"
+  }
 }
