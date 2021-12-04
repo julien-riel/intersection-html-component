@@ -1,5 +1,5 @@
-import {IncomingMotorized,OutgoingMotorized,TerrePlein,Trottoir} from './scripts/laneUsage';
-import {Approche} from './scripts/approche';
+import {IncomingMotorized,OutgoingMotorized,TerrePlein,Trottoir} from './scripts/laneUsage.js';
+import {Approche} from './scripts/approche.js';
 
         const lane1 = new OutgoingMotorized({
           lines: {
@@ -61,10 +61,10 @@ import {Approche} from './scripts/approche';
         const uneAutreApproche = new Approche(
           [
             new Trottoir(),
+            new OutgoingMotorized(),
             new IncomingMotorized(),
             new IncomingMotorized(),
-            new IncomingMotorized(),
-            new IncomingMotorized(),
+            new OutgoingMotorized(),
             new Trottoir(),
           ], 'east', 500, 500);
         uneAutreApproche.draw();
