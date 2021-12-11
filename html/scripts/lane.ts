@@ -12,16 +12,15 @@ export interface ILaneOptions {
 }
 
 class Lane {
-
-  private x:number;
-  private y:number;
-  private width:number;
-  private height:number;
+  private x: number;
+  private y: number;
+  private width: number;
+  private height: number;
   private distanceLigneArret: number;
   private lines: {
     lineLeft: any;
-    lineCenter: any,
-    lineRight: any
+    lineCenter: any;
+    lineRight: any;
   };
   private usage: string;
   private type: string;
@@ -30,14 +29,13 @@ class Lane {
   constructor(options: ILaneOptions) {
     this.x = options.x || 0;
     this.y = options.y || 0;
-    this.width = options.width  || config.defaultLaneWidth;
+    this.width = options.width || config.defaultLaneWidth;
     this.height = options.height || 500; // "trottoir (haut) ou route (bas)"
     this.type = options.type || "entrant";
     this.distanceLigneArret = config.distanceLigneArret;
     this.lines = options.lines || {};
-
-    (this.usage = options.usage || "voitures"),
-      (this.virages = ["gauche", "tout-droit", "droite", "demi-tour"]);
+    this.usage = options.usage || "voitures";
+    this.virages = ["gauche", "tout-droit", "droite", "demi-tour"];
   }
 
   debugPoint(x: number, y: number, nom: string) {
@@ -169,7 +167,8 @@ class Lane {
     const textMargin = 7;
     this.debugPoint(this.x, this.y, `${this.x}, ${this.y}`);
     this.debugPoint(this.getLaneCenter().x, this.y + 30, "milieu de voie");
-    const posFlecheY = this.y + config.distanceLigneArret + config.distanceFlechesLigneArret;
+    const posFlecheY =
+      this.y + config.distanceLigneArret + config.distanceFlechesLigneArret;
     draw.drawText(this.x + textMargin, posFlecheY + 230, this.usage);
   }
 

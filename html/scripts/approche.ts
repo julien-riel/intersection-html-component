@@ -9,6 +9,8 @@ class Approche {
     this.lanes = lanes;
     this.x = x;
     this.y = y;
+
+    const g = draw.createGroup("approche");
   }
 
   getWidth() {
@@ -21,11 +23,10 @@ class Approche {
   }
 
   draw() {
-    //const rayonRondeurTrottoir = lane0.width;
     // Dessiner l'arrière plan
     // drawRectangle(0, 0, 660, 600, "gray");
-
     // Dessiner la chaussée et le terrain
+    
     let cursorPosition = this.x;
     for (const lane of this.lanes) {
       lane.x = cursorPosition;

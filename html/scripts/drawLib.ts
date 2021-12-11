@@ -74,4 +74,9 @@ function drawUse(x: number, y: number, id: string) {
   attachToTheRightPlace(newRect);
 }
 
-export {createLignePointille, createLignePleine, drawRectangle, drawCircle, drawText, drawUse}
+function createGroup(id: string) {
+  let g: SVGGElement = document.createElementNS(svgns, "g");
+  return g;
+}
+
+export {createLignePointille, createLignePleine, drawRectangle, drawCircle, drawText, drawUse, createGroup};
