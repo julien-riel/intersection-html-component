@@ -1,12 +1,9 @@
-import { Intersection } from "./Intersection.js";
-import { TransportElementInIntersection } from "./TransportElementInIntersection.js";
-
 // Create a class for the element
 export const svgns = "http://www.w3.org/2000/svg";
 
-// Utilisations des slots
-//https://gist.github.com/ebidel/2d2bb0cdec3f2a16cf519dbaa791ce1b
-
+/**
+ *
+ */
 export class TransportElement extends HTMLElement {
   protected g: SVGGElement;
 
@@ -14,34 +11,11 @@ export class TransportElement extends HTMLElement {
     // Always call super first in constructor
     super();
     this.g = this.initialiseDrawingContext();
-
-    console.log(
-      "Constructeur de la classe de base du transport element",
-      this.tagName
-    );
   }
-  connectedCallback() {
-    console.log("connectedCallback ", this.tagName);
-    this.debugMe();
-  }
-
-  disconnectedCallback() {
-    console.log("disconnectedCallback");
-  }
-
-  adoptedCallback() {
-    console.log("disconnectedCallback");
-  }
-
-  attributeChangedCallback() {
-    console.log("attributeChangedCallback");
-  }
-
-  observedAttributes() {}
 
   protected currentSvgContainer?: SVGGElement;
 
-  protected appendtt() {
+  protected appendSvgContainerToThis() {
     // Ajout de trace de débogage
     if (this.currentSvgContainer) {
       this.appendChild(this.currentSvgContainer);
@@ -72,7 +46,7 @@ export class TransportElement extends HTMLElement {
     col: string
   ): SVGCircleElement {
     // make a simple circle
-    let circle = document.createElementNS(svgns, "circle");
+    const circle = document.createElementNS(svgns, "circle");
     circle.setAttribute("cx", "" + x);
     circle.setAttribute("cy", "" + y);
     circle.setAttribute("r", "" + r);
@@ -87,7 +61,7 @@ export class TransportElement extends HTMLElement {
     y2: number,
     color: string
   ) {
-    let line = document.createElementNS(svgns, "line");
+    const line = document.createElementNS(svgns, "line");
     line.setAttribute("x1", x.toString());
     line.setAttribute("y1", y.toString());
     line.setAttribute("x2", x2.toString());
@@ -106,7 +80,7 @@ export class TransportElement extends HTMLElement {
     y2: number,
     color: string
   ) {
-    let line = document.createElementNS(svgns, "line");
+    const line = document.createElementNS(svgns, "line");
     line.setAttribute("x1", x.toString());
     line.setAttribute("y1", y.toString());
     line.setAttribute("x2", x2.toString());
@@ -124,7 +98,7 @@ export class TransportElement extends HTMLElement {
     couleur: string
   ) {
     // make a simple rectangle
-    let newRect = document.createElementNS(svgns, "rect");
+    const newRect = document.createElementNS(svgns, "rect");
     newRect.setAttribute("x", x.toString());
     newRect.setAttribute("y", y.toString());
     newRect.setAttribute("width", width.toString());
@@ -134,8 +108,7 @@ export class TransportElement extends HTMLElement {
   }
 
   protected makeText(x: number, y: number, text: string) {
-    const lg = 100;
-    let textElement = document.createElementNS(svgns, "text");
+    const textElement = document.createElementNS(svgns, "text");
     textElement.setAttribute("x", x.toString());
     textElement.setAttribute("y", y.toString());
     //textElement.setAttribute("transform", `rotate(-45,${x},${y})`);
@@ -144,138 +117,11 @@ export class TransportElement extends HTMLElement {
   }
 
   protected drawUse(x: number, y: number, id: string) {
-    let newRect = document.createElementNS(svgns, "use");
+    const newRect = document.createElementNS(svgns, "use");
     newRect.setAttribute("x", x.toString());
     newRect.setAttribute("y", y.toString());
     newRect.setAttribute("href", "#" + id);
   }
 }
 
-/**
- *
- */
-export class Approach extends TransportElementInIntersection {
-  private currentLineXOffset = 0;
-
-  constructor() {
-    // Always call super first in constructor
-    super();
-
-    this.setIntersection(this.parentNode as Intersection);
-
-    // TODO: Allow Approach only in an intersection element
-    this.intersection = this.parentNode as Intersection;
-    this.intersection.registerApproach(this.getDrawingContext());
-
-    const d = this.getDirection();
-    let deg = "0";
-    let trans = "0 0";
-    if (d === "north") {
-      deg = "180 500 220";
-      trans = "500 220";
-    } else if (d === "east") {
-      deg = "270 400 200";
-      trans = "200 200";
-    } else if (d === "west") {
-      deg = "90 200 200";
-      trans = "200 200";
-    } else if (d === "south") {
-      deg = "0 200 400";
-      trans = "200 400";
-    }
-    // Exemple de comment pivoter une approche
-    (this.getDrawingContext() as SVGGElement).setAttribute(
-      "transform",
-      "rotate(" + deg + ")" + " translate(" + trans + ")"
-    );
-
-    this.draw(this.makeCircle(0, 0, 1, "yellow"));
-  }
-
-  public registerLane(lane: Lane) {
-    lane.setXOffset(this.currentLineXOffset);
-    this.currentLineXOffset += lane.getLaneWidth();
-    // console.log("Directoin de approche", approach.getDirection());
-  }
-
-  public getApproachWidth(): number {
-    return this.currentLineXOffset;
-  }
-
-  public attachDrawingContext(drawingContext: SVGElement) {
-    this.getDrawingContext().appendChild(drawingContext);
-  }
-
-  public getDirection(): string {
-    return this.getAttribute("direction") || "";
-  }
-}
-
-export class Lane extends TransportElementInIntersection {
-  private approach: Approach;
-  private xOffset = 0;
-
-  constructor() {
-    // Always call super first in constructor
-    super();
-    // TODO: Allow Approach only in an Intersection element
-    this.approach = this.parentNode as Approach;
-    this.intersection = this.approach.intersection;
-
-    this.approach.attachDrawingContext(this.getDrawingContext());
-    this.approach.registerLane(this);
-
-    this.draw(
-      this.makeRectangle(
-        this.xOffset,
-        0,
-        this.getLaneWidth(),
-        10,
-        this.getCouleurByUsage(this.getLaneUsage())
-      )
-    );
-
-    this.draw(this.makeText(this.getMiddleOfLane(), 1, this.getLaneUsage()));
-    this.draw(this.makeCircle(this.xOffset, 0, 0.3, "green"));
-  }
-
-  public setXOffset(value: number) {
-    this.xOffset = value;
-  }
-
-  public getLaneWidth(): number {
-    const attrValue = this.getAttribute("lane-width");
-    if (attrValue === null) {
-      return 3; // 3 meters as default value
-    }
-    return parseFloat(attrValue);
-  }
-
-  public getLaneUsage(): string {
-    const attrValue = this.getAttribute("lane-usage");
-    if (attrValue === null) {
-      return "car";
-    }
-    return attrValue;
-  }
-
-  private getMiddleOfLane(): number {
-    return this.xOffset + this.getLaneWidth() / 2;
-  }
-
-  private getCouleurByUsage(usage: string) {
-    if (usage == "car") {
-      return "gray";
-    } else if (usage == "trottoir") {
-      return "lightGray";
-    } else if (usage == "terre-plein") {
-      return "green";
-    }
-    return "gray";
-  }
-}
-
 // Define the new element
-
-customElements.define("transport-approach", Approach);
-customElements.define("transport-lane", Lane);

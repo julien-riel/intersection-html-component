@@ -1,182 +1,77 @@
-import * as config from "./config.js";
-import * as draw from "./drawLib.js";
+import { Approach } from "./Approach.js";
+import { TransportElementInIntersection } from "./TransportElementInIntersection.js";
 
-export interface ILaneOptions {
-  x?: number;
-  y?: number;
-  width?: number;
-  height?: number;
-  usage?: any;
-  lines?: any;
-  type?: any;
-}
+export class Lane extends TransportElementInIntersection {
+  private approach?: Approach = undefined;
+  private xOffset = 0;
 
-class Lane {
-  private x: number;
-  private y: number;
-  private width: number;
-  private height: number;
-  private distanceLigneArret: number;
-  private lines: {
-    lineLeft: any;
-    lineCenter: any;
-    lineRight: any;
-  };
-  private usage: string;
-  private type: string;
-  private virages: string[];
-
-  constructor(options: ILaneOptions) {
-    this.x = options.x || 0;
-    this.y = options.y || 0;
-    this.width = options.width || config.defaultLaneWidth;
-    this.height = options.height || 500; // "trottoir (haut) ou route (bas)"
-    this.type = options.type || "entrant";
-    this.distanceLigneArret = config.distanceLigneArret;
-    this.lines = options.lines || {};
-    this.usage = options.usage || "voitures";
-    this.virages = ["gauche", "tout-droit", "droite", "demi-tour"];
+  constructor() {
+    // Always call super first in constructor
+    super();
   }
 
-  debugPoint(x: number, y: number, nom: string) {
-    draw.drawCircle(x, y, 5, "red");
-    draw.drawText(x, y, nom);
-  }
+  connectedCallback() {
+    // TODO: Allow Approach only in an Intersection element
+    const x: any = this.parentNode;
+    if (x) {
+      this.approach = x as Approach;
 
-  /**
-   * Dessine les lignes, il faut dessiner les lignes après avoir dessiné la chaussée.
-   *
-   * Cette fonction mérite d'être refactorisée
-   * */
-  drawLines() {
-    const margin = 8;
-    if (this.lines.lineLeft) {
-      if (this.lines.lineLeft.type == "solid") {
-        draw.createLignePleine(
-          margin + this.x,
-          this.y + this.distanceLigneArret,
-          margin + this.x,
-          this.y + this.height,
-          this.lines.lineLeft.color
-        );
-      } else {
-        draw.createLignePointille(
-          margin + this.x,
-          this.y + this.distanceLigneArret,
-          margin + this.x,
-          this.y + this.height,
-          this.lines.lineLeft.color
-        );
-      }
-    }
-    if (this.lines.lineCenter) {
-      if (this.lines.lineCenter.type == "solid") {
-        draw.createLignePleine(
-          this.width + this.x,
-          this.y + this.distanceLigneArret,
-          this.width + this.x,
-          this.y + this.height,
-          this.lines.lineCenter.color
-        );
-      } else {
-        draw.createLignePointille(
-          this.width + this.x,
-          this.y + this.distanceLigneArret,
-          this.width + this.x,
-          this.y + this.height,
-          this.lines.lineCenter.color
-        );
-      }
-    }
-    if (this.lines.lineRight) {
-      if (this.lines.lineRight.type == "solid") {
-        draw.createLignePleine(
-          -margin + this.width + this.x,
-          this.y + this.distanceLigneArret,
-          -margin + this.width + this.x,
-          this.y + this.height,
-          this.lines.lineRight.color
-        );
-      } else {
-        draw.createLignePointille(
-          -margin + this.width + this.x,
-          this.y + this.distanceLigneArret,
-          -margin + this.width + this.x,
-          this.y + this.height,
-          this.lines.lineRight.color
-        );
-      }
-    }
+      this.intersection = this.approach.intersection;
 
-    if (this.usage == "car" && this.type === "entrant")
-      draw.createLignePleine(
-        this.x,
-        this.y + this.distanceLigneArret,
-        this.x + this.width,
-        this.y + this.distanceLigneArret,
-        "white"
+      this.approach.attachDrawingContext(this.getDrawingContext());
+      this.approach.registerLane(this);
+
+      this.draw(
+        this.makeRectangle(
+          this.xOffset,
+          0,
+          this.getLaneWidth(),
+          10,
+          this.getCouleurByUsage(this.getLaneUsage())
+        )
       );
+
+      this.draw(this.makeText(this.getMiddleOfLane(), 1, this.getLaneUsage()));
+      this.draw(this.makeCircle(this.xOffset, 0, 0.3, "green"));
+    }
+    this.debugMe();
   }
 
-  getCouleurByUsage(usage: string) {
+  public setXOffset(value: number) {
+    this.xOffset = value;
+  }
+
+  public getLaneWidth(): number {
+    const attrValue = this.getAttribute("lane-width");
+    if (attrValue === null) {
+      return 3; // 3 meters as default value
+    }
+    return parseFloat(attrValue);
+  }
+
+  public getLaneUsage(): string {
+    const attrValue = this.getAttribute("lane-usage");
+    if (attrValue === null) {
+      return "car";
+    }
+    return attrValue;
+  }
+
+  private getMiddleOfLane(): number {
+    return this.xOffset + this.getLaneWidth() / 2;
+  }
+
+  private getCouleurByUsage(usage: string) {
     if (usage == "car") {
-      return config.couleurRoute;
+      return "gray";
     } else if (usage == "trottoir") {
       return "lightGray";
     } else if (usage == "terre-plein") {
       return "green";
     }
-    return config.couleurRoute;
-  }
-
-  draw() {
-    /*
-      if (this.usage == "trottoir") {
-        draw.drawCircle(
-          this.x,
-          this.y,
-          this.width,
-          this.getCouleurByUsage(this.usage)
-        );
-      }
-    */
-
-    draw.drawRectangle(
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      this.getCouleurByUsage(this.usage)
-    );
-    draw.drawCircle(this.x, 0, 2, "black");
-
-    //
-    if (this.usage == "car" && this.type == "entrant") {
-      const posFlecheX = this.getLaneCenter().x;
-      const posFlecheY =
-        this.y + config.distanceLigneArret + config.distanceFlechesLigneArret;
-      const offset = 20;
-      draw.drawUse(-offset + posFlecheX, posFlecheY, "gauche");
-      draw.drawUse(0 + posFlecheX, posFlecheY, "centre");
-      draw.drawUse(+offset + posFlecheX, posFlecheY, "droite");
-      draw.drawUse(+0 + posFlecheX, posFlecheY + 200, "bike");
-    }
-  }
-
-  debug() {
-    const textMargin = 7;
-    this.debugPoint(this.x, this.y, `${this.x}, ${this.y}`);
-    this.debugPoint(this.getLaneCenter().x, this.y + 30, "milieu de voie");
-    const posFlecheY =
-      this.y + config.distanceLigneArret + config.distanceFlechesLigneArret;
-    draw.drawText(this.x + textMargin, posFlecheY + 230, this.usage);
-  }
-
-  getLaneCenter() {
-    return {
-      x: this.x + this.width / 2,
-    };
+    return "gray";
   }
 }
 
-export { Lane };
+console.log("On enregistre un lane");
+//customElements.define("transport-lane", Lane);

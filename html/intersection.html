@@ -5,26 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script type="module" src="scripts/drawLib.js"></script>
-    <script type="module" src="scripts/lane.js"></script>
-    <script type="module" src="scripts/approche.js"></script>
-    <script type="module" src="scripts/laneUsage.js"></script>
-    <script type="module" src="scripts/webComponent.js"></script>
-    <script type="module" src="scripts/Intersection.js"></script>
-    <script type="module" src="scripts/TranportElement.js"></script>
-    <script
-      type="module"
-      src="scripts/TransportElementInIntersection.js"
-    ></script>
-
+    <script type="module" src="Lane.js"></script>
+    <script type="module" src="Approach.js"></script>
+    <script type="module" src="Intersection.js"></script>
+    <script type="module" src="TranportElement.js"></script>
+    <script type="module" src="TransportElementInIntersection.js"></script>
     <script type="module" src="main.js"></script>
+
     <script></script>
   </head>
 
   <body>
     <h1>Mouvement et approche d'une intersection</h1>
     <h2>Suivra un pooup</h2>
-    <div style="border: 1px solid black">
+    <div style="border: 1px solid black; padding: 0px">
       <transport-intersection>
         <transport-approach direction="north">
           <transport-lane
@@ -40,12 +34,9 @@
           ></transport-lane>
           <transport-lane type="outgoing" lane-width="4"></transport-lane>
 
-          <transport-lane
-            type="outgoing"
-            lane-usage="trottoir"
-          ></transport-lane>
+          <transport-lane type="outgoing" lane-usage="trottoir">
+          </transport-lane>
         </transport-approach>
-
         <transport-approach direction="south">
           <transport-lane
             type="outgoing"

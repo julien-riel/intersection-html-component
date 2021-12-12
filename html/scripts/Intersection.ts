@@ -12,7 +12,7 @@ export class Intersection extends TransportElement {
     super();
 
     this.createRootSVGElement();
-    this.appendtt();
+    this.appendSvgContainerToThis();
   }
 
   private createRootSVGElement() {
@@ -58,4 +58,4 @@ export class Intersection extends TransportElement {
   }
 }
 
-customElements.define("transport-intersection", Intersection);
+// customElements.define("transport-intersection", Intersection);

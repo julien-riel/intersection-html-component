@@ -14,7 +14,7 @@ export class TransportElementInIntersection extends TransportElement {
   }
 
   getRatio(): number {
-    return this.intersection!.getRatio();
+    return this.intersection?.getRatio() || 0;
   }
 
   protected override makeCircle(x: number, y: number, r: number, col: string) {

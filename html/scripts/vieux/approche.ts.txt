@@ -1,6 +1,5 @@
-import * as draw from './drawLib.js';
+import * as draw from "./drawLib.js";
 class Approche {
-
   lanes: any;
   x: number;
   y: number;
@@ -26,7 +25,7 @@ class Approche {
     // Dessiner l'arrière plan
     // drawRectangle(0, 0, 660, 600, "gray");
     // Dessiner la chaussée et le terrain
-    
+
     let cursorPosition = this.x;
     for (const lane of this.lanes) {
       lane.x = cursorPosition;

@@ -3,10 +3,10 @@ import {
   OutgoingMotorized,
   TerrePlein,
   Trottoir,
-} from "./scripts/laneUsage.js";
+} from "./scripts/vieux/laneUsage.js";
 console.log("Fichier Principal.");
 
-import { Approche } from "./scripts/approche.js";
+import { Approche } from "./scripts/vieux/approche.js";
 const lane1 = new OutgoingMotorized({
   lines: {
     lineLeft: {

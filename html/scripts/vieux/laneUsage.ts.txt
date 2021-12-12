@@ -1,4 +1,4 @@
-import {ILaneOptions, Lane} from './lane.js';
+import { ILaneOptions, Lane } from "./lane.js";
 class Trottoir extends Lane {
   constructor() {
     super({
@@ -40,4 +40,4 @@ class TerrePlein extends Lane {
   }
 }
 
-export {Trottoir, OutgoingMotorized, IncomingMotorized, TerrePlein};
+export { Trottoir, OutgoingMotorized, IncomingMotorized, TerrePlein };

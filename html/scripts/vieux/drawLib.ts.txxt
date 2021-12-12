@@ -1,8 +1,13 @@
 const svgns = "http://www.w3.org/2000/svg";
 const racineSvg = "street";
 
-function createLignePointille(x: number, y: number, x2: number, y2: number, color: string) {
-  
+function createLignePointille(
+  x: number,
+  y: number,
+  x2: number,
+  y2: number,
+  color: string
+) {
   let line = document.createElementNS(svgns, "line");
   line.setAttribute("x1", x.toString());
   line.setAttribute("y1", y.toString());
@@ -10,9 +15,9 @@ function createLignePointille(x: number, y: number, x2: number, y2: number, colo
   line.setAttribute("y2", y2.toString());
   line.setAttribute("stroke", color);
   line.setAttribute("stroke-dasharray", "30 25");
-  line.setAttribute("stroke-width", '5');
+  line.setAttribute("stroke-width", "5");
 
- attachToTheRightPlace(line);
+  attachToTheRightPlace(line);
 }
 
 function attachToTheRightPlace(line: Element) {
@@ -22,19 +27,31 @@ function attachToTheRightPlace(line: Element) {
   }
 }
 
-function createLignePleine(x: number, y: number, x2: number, y2: number, color: string) {
+function createLignePleine(
+  x: number,
+  y: number,
+  x2: number,
+  y2: number,
+  color: string
+) {
   let line = document.createElementNS(svgns, "line");
   line.setAttribute("x1", x.toString());
   line.setAttribute("y1", y.toString());
   line.setAttribute("x2", x2.toString());
   line.setAttribute("y2", y2.toString());
   line.setAttribute("stroke", color);
-  line.setAttribute("stroke-width", '5');
+  line.setAttribute("stroke-width", "5");
 
   attachToTheRightPlace(line);
 }
 
-function drawRectangle(x: number, y: number, width: number, height: number, couleur: string) {
+function drawRectangle(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  couleur: string
+) {
   // make a simple rectangle
   let newRect = document.createElementNS(svgns, "rect");
   newRect.setAttribute("x", x.toString());
@@ -57,12 +74,11 @@ function drawCircle(x: number, y: number, r: number, col: string) {
 }
 
 function drawText(x: number, y: number, text: string) {
-  const lg = 100;
   let newRect = document.createElementNS(svgns, "text");
   newRect.setAttribute("x", x.toString());
   newRect.setAttribute("y", y.toString());
   newRect.innerHTML = text;
-  attachToTheRightPlace(newRect)
+  attachToTheRightPlace(newRect);
 }
 
 function drawUse(x: number, y: number, id: string) {
@@ -74,9 +90,17 @@ function drawUse(x: number, y: number, id: string) {
   attachToTheRightPlace(newRect);
 }
 
-function createGroup(id: string) {
+function createGroup() {
   let g: SVGGElement = document.createElementNS(svgns, "g");
   return g;
 }
 
-export {createLignePointille, createLignePleine, drawRectangle, drawCircle, drawText, drawUse, createGroup};
+export {
+  createLignePointille,
+  createLignePleine,
+  drawRectangle,
+  drawCircle,
+  drawText,
+  drawUse,
+  createGroup,
+};
