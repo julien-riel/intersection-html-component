@@ -10,7 +10,7 @@
     "clean": "rimraf dist/",
     "copy-files": "copyfiles -u 1 html/**/*.html html/**/*.css dist/",
     "build": "npm run clean && npm run compile && npm run copy-files",
-    "doc": "tplant --input html/**/*.ts"
+    "doc": "tplant --input html/**/*.ts --output docs/class-diagram.plantuml"
   },
   "repository": {
     "type": "git",

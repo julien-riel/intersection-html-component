@@ -19,45 +19,46 @@ export class Approach extends TransportElementInIntersection {
     if (!this.intersection) {
       throw new Error("Imossible d'associer l'approche à l'intersection");
     }
-    this.intersection.registerApproach(this.getDrawingContext());
+
+    this.intersection.attachDrawingContext(this.getDrawingContext());
+    this.intersection.registerApproach(this);
 
     const d = this.getDirection();
-    this.setTransform(d);
+    this.setTransform(d, 0, 0);
 
     this.draw(this.makeCircle(0, 0, 1, "yellow"));
   }
 
-  public setTransform(d: string, x: number, y: number) {
-    console.log(
-      "Bonjour, je suis une approche de largeur",
-      this.getApproachWidth()
-    );
-    let deg = "0";
-    let trans = "0 0";
-    if (d === "north") {
-      deg = "180 500 220";
-      trans = "500 220";
-    } else if (d === "east") {
-      deg = "270 400 200";
-      trans = "200 200";
-    } else if (d === "west") {
-      deg = "90 200 200";
-      trans = "200 200";
-    } else if (d === "south") {
-      deg = "0 200 400";
-      trans = "200 400";
+  public setTransform(direction: string, x: number, y: number) {
+    let degre = 0;
+    if (direction === "north") {
+      degre = 180;
+    } else if (direction === "east") {
+      degre = 270;
+    } else if (direction === "west") {
+      degre = 90;
+    } else if (direction === "south") {
+      degre = 0;
     }
+
+    const ratio = this.getRatio();
+    const deg = `${degre} ${x * ratio} ${y * ratio}`;
+    const trans = `${x * ratio} ${y * ratio}`;
+
+    const monTransform = `rotate(${deg}) translate(${trans})`;
+    console.log(monTransform, monTransform);
     // Exemple de comment pivoter une approche
     (this.getDrawingContext() as SVGGElement).setAttribute(
       "transform",
-      "rotate(" + deg + ")" + " translate(" + trans + ")"
+      monTransform
     );
   }
 
   public registerLane(lane: Lane) {
     lane.setXOffset(this.currentLineXOffset);
     this.currentLineXOffset += lane.getLaneWidth();
-    // console.log("Directoin de approche", approach.getDirection());
+    this.intersection?.computeTransformOfApproaches();
+    console.log("Enregistrement de la lane dans l'approche");
   }
 
   public getApproachWidth(): number {

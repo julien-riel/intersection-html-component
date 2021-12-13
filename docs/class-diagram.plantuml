@@ -1,0 +1,60 @@
+@startuml
+class TransportElement extends HTMLElement {
+    #g: SVGGElement
+    #currentSvgContainer?: SVGGElement | undefined
+    #appendSvgContainerToThis(): void
+    #debugMe(): void
+    #initialiseDrawingContext(): SVGGElement
+    #getDrawingContext(): SVGElement
+    #draw(elem: SVGElement): void
+    #makeCircle(x: number, y: number, r: number, col: string): SVGCircleElement
+    #makeLignePointille(x: number, y: number, x2: number, y2: number, color: string): SVGLineElement
+    #makeLignePleine(x: number, y: number, x2: number, y2: number, color: string): SVGLineElement
+    #makeRectangle(x: number, y: number, width: number, height: number, couleur: string): SVGRectElement
+    #makeText(x: number, y: number, text: string): SVGTextElement
+    #drawUse(x: number, y: number, id: string): void
+}
+class Intersection extends TransportElement {
+    -pixelWidth: number
+    -intersectionWithInMeter: number
+    -createRootSVGElement(): void
+    #makeCircle(x: number, y: number, r: number, col: string): SVGCircleElement
+    -addDebugInformation(): void
+    +getRatio(): number
+    +registerApproach(approach: Approach): void
+    +attachDrawingContext(drawingContext: SVGElement): void
+    -approachesByDirection: { [key: string]: Approach; }
+    -setApproachForDirection(direction: string, approach: Approach): void
+    +getApprochByDirection(direction: string): Approach
+    +getWiderApproachWE(): number
+    +getWiderApproachNS(): number
+    -getWiderApproach(approachA?: Approach | undefined, approachB?: Approach | undefined): number
+    +computeTransformOfApproaches(): void
+}
+class TransportElementInIntersection extends TransportElement {
+    +intersection?: Intersection | undefined
+    #setIntersection(intersection: Intersection): void
+    +getRatio(): number
+    #makeCircle(x: number, y: number, r: number, col: string): SVGCircleElement
+    #makeText(x: number, y: number, text: string): SVGTextElement
+    #makeRectangle(x: number, y: number, width: number, height: number, color: string): SVGRectElement
+}
+class Lane extends TransportElementInIntersection {
+    -approach?: Approach | undefined
+    -xOffset: number
+    +connectedCallback(): void
+    +setXOffset(value: number): void
+    +getLaneWidth(): number
+    +getLaneUsage(): string
+    -getMiddleOfLane(): number
+    -getCouleurByUsage(usage: string): "gray" | "lightGray" | "green"
+}
+class Approach extends TransportElementInIntersection {
+    -currentLineXOffset: number
+    +setTransform(direction: string, x: number, y: number): void
+    +registerLane(lane: Lane): void
+    +getApproachWidth(): number
+    +attachDrawingContext(drawingContext: SVGElement): void
+    +getDirection(): string
+}
+@enduml
