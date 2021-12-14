@@ -6,7 +6,8 @@ import { TransportElementInIntersection } from "./TransportElementInIntersection
  *
  */
 export class Approach extends TransportElementInIntersection {
-  private currentLineXOffset = 0;
+  private currentWidth = 0;
+  private lanes: Lane[] = [];
 
   constructor() {
     // Always call super first in constructor
@@ -17,7 +18,7 @@ export class Approach extends TransportElementInIntersection {
     // TODO: Allow Approach only in an intersection element
     this.intersection = this.parentNode as Intersection;
     if (!this.intersection) {
-      throw new Error("Imossible d'associer l'approche à l'intersection");
+      throw new Error("Impossible d'associer l'approche à l'intersection");
     }
 
     this.intersection.attachDrawingContext(this.getDrawingContext());
@@ -55,14 +56,16 @@ export class Approach extends TransportElementInIntersection {
   }
 
   public registerLane(lane: Lane) {
-    lane.setXOffset(this.currentLineXOffset);
-    this.currentLineXOffset += lane.getLaneWidth();
-    this.intersection?.computeTransformOfApproaches();
     console.log("Enregistrement de la lane dans l'approche");
+    this.lanes.push(lane);
+    this.recomputeWidth();
+
+    // Should not tell what to do to the intersection
+    this.intersection?.computeTransformOfApproaches();
   }
 
   public getApproachWidth(): number {
-    return this.currentLineXOffset;
+    return this.currentWidth;
   }
 
   public attachDrawingContext(drawingContext: SVGElement) {
@@ -72,6 +75,14 @@ export class Approach extends TransportElementInIntersection {
   public getDirection(): string {
     return this.getAttribute("direction") || "";
   }
+
+  public recomputeWidth() {
+    let offset = 0;
+    for (const lane of this.lanes) {
+      lane.setXOffset(offset);
+
+      offset += lane.getLaneWidth();
+    }
+    this.currentWidth = offset;
+  }
 }
-console.log("Ok. on arrête de niaiser!");
-// customElements.define("transport-approach", Approach);

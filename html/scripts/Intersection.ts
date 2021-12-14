@@ -29,6 +29,12 @@ export class Intersection extends TransportElement {
     // Bind the 'g' element
     this.currentSvgContainer.appendChild(this.getDrawingContext());
 
+    window.onresize = (ev: UIEvent) => {
+      console.log("SSSS", ev);
+      this.pixelWidth = (this.parentNode as any).offsetWidth;
+      this.computeTransformOfApproaches();
+    };
+
     this.addDebugInformation();
   }
 
@@ -109,21 +115,25 @@ export class Intersection extends TransportElement {
     const northApproach = this.getApprochByDirection("north");
     if (northApproach) {
       northApproach.setTransform("north", longueurVoieX + x, longueurVoieY);
+      northApproach.recomputeWidth();
     }
 
     const southApproach = this.getApprochByDirection("south");
     if (southApproach) {
       southApproach.setTransform("south", longueurVoieX, longueurVoieY + y);
+      southApproach.recomputeWidth();
     }
 
     const westApproach = this.getApprochByDirection("west");
     if (westApproach) {
       westApproach.setTransform("west", longueurVoieX, longueurVoieY);
+      westApproach.recomputeWidth();
     }
 
     const eastApproach = this.getApprochByDirection("east");
     if (eastApproach) {
       eastApproach.setTransform("east", longueurVoieX + x, longueurVoieY + y);
+      eastApproach.recomputeWidth();
     }
   }
 }
